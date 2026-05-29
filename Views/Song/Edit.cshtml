@@ -1,0 +1,80 @@
+@model T2502E_Assignment_Nguyen_anh_tu_NetCore.Models.Song
+
+<h2>Chỉnh sửa bài hát</h2>
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Tên bài hát</label>
+        <input asp-for="Title" class="form-control"/>
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="SingerId" class="form-label">Tên Ca sĩ</label>
+        <select asp-for="SingerId" class="form-control" asp-items="ViewBag.SingerId">
+            <option value="SingerId">-- Chọn Ca sĩ --</option>
+        </select>
+        <span asp-validation-for="SingerId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ComposerId" class="form-label">Tên Nhạc sĩ</label>
+        <select asp-for="ComposerId" class="form-control" asp-items="ViewBag.ComposerId">
+            <option value="ComposerId">-- Chọn Nhạc sĩ --</option>
+        </select>
+        <span asp-validation-for="ComposerId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Lyrics" class="form-label">Lời bài hát</label>
+        <textarea asp-for="Lyrics" id="lyrics" class="form-control"></textarea>
+        <span asp-validation-for="Lyrics" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ImageFile" class="form-label">Ảnh</label>
+        <input type="file" asp-for="ImageFile"  class="form-control" />
+        <input type="text" asp-for="ThumbnailUrl" class="form-control" readonly>
+        <img src="@Model.ThumbnailUrl" alt="" style="width: 100px">
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="AudioFile" class="form-label">Audio</label>
+        <input asp-for="AudioFile" type="file" class="form-control"/>
+        <input type="text" asp-for="Mp3Link" class="form-control" readonly>
+        <audio controls>
+            <source src="@Model.Mp3Link" type="audio/mpeg">
+            Trình duyệt của bạn không hỗ trợ thẻ audio.
+        </audio>
+        <span asp-validation-for="AudioFile" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ReleaseDate" class="form-label">Ngày Phát hành</label>
+        <input type="datetime-local" asp-for="ReleaseDate" class="form-control"/>
+        <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Cập nhật</button>
+    <a asp-action="Index">Hủy</a>
+</form>
+
+@*
+ ckeditor
+*@
+@section Scripts {
+    <!-- Nhúng thư viện CKEditor 5 từ CDN -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#lyrics'), {
+                // Cấu hình các công cụ hiển thị trên thanh toolbar (tùy chọn)
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo']
+            })
+            .then(editor => {
+                editor.model.document.on('change:data', () => {
+                    document.getSelection('#lyrics').value = editor.getData();
+                })
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    
+    <!-- Đừng quên nhúng script validation mặc định của .NET -->
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,49 @@
+@model T2502E_Assignment_Nguyen_anh_tu_NetCore.Models.Singer
+
+<h2>Thêm mới Ca sĩ</h2>
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Tên Ca sĩ</label>
+        <input asp-for="Name" class="form-control"/>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Biography" class="form-label">Tiểu sử</label>
+        <textarea asp-for="Biography" id="biography" class="form-control"></textarea>
+        <span asp-validation-for="Biography" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ImageFile" class="form-label">Ảnh</label>
+        <input type="file" asp-for="ImageFile"  class="form-control" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Thêm mới</button>
+    <a asp-action="Index">Hủy</a>
+</form>
+
+@*
+ ckeditor
+*@
+@section Scripts {
+    <!-- Nhúng thư viện CKEditor 5 từ CDN -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#biography'), {
+                // Cấu hình các công cụ hiển thị trên thanh toolbar (tùy chọn)
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo']
+            })
+            .then(editor => {
+                editor.model.document.on('change:data', () => {
+                    document.getSelection('#biography').value = editor.getData();
+                })
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    
+    <!-- Đừng quên nhúng script validation mặc định của .NET -->
+    <partial name="_ValidationScriptsPartial" />
+}

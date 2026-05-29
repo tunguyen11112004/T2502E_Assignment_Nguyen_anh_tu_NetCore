@@ -1,0 +1,90 @@
+@model T2502E_Assignment_Nguyen_anh_tu_NetCore.ViewModels.ComposerFilterViewModel
+
+<a asp-action="Create" class="btn btn-primary">Thêm mới</a>
+<!-- lọc -->
+<form asp-action="Index" method="get" class="row g-3 mb-4 p-3 bg-light border rounded">
+    <div class="col-md-3">
+        <input type="text" name="Keyword" value="@Model.Keyword" class="form-control" placeholder="Tìm theo tên">
+    </div>
+    <div class="col-md-3">
+        <input type="text" name="DateRange" value="@Model.DateRange" id="daterange" class="form-control" placeholder="Chọn khoảng thời gian">
+    </div>
+    <div class="col-md-3">
+        <select name="SortOrder" class="form-select">
+            <option value="name_asc" selected="@(Model.SortOrder == "name_asc")">Tên (A-Z)</option>
+            <option value="name_desc" selected="@(Model.SortOrder == "name_desc")">Tên (Z-A)</option>
+            <option value="date_desc" selected="@(Model.SortOrder == "date_desc")">Mới nhất</option>
+            <option value="date_asc" selected="@(Model.SortOrder == "date_asc")">Cũ nhất</option>
+        </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+        <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+        <a asp-action="Index" class="btn btn-secondary w-100">Reset</a>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Tên ca sĩ</th>
+            <th>Tiểu sử</th>
+            <th>Ảnh</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Composers)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@Html.Raw(@item.Biography)</td>
+                <td><img src="@item.ImageUrl" alt=""></td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Sửa</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<!-- Thanh phân trang -->
+@{
+    var prevDisabled = !Model.Composers.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Composers.HasNextPage ? "disabled" : "";
+}
+
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @prevDisabled">
+            <a class="page-link" 
+               asp-action="Index" 
+               asp-route-pageIndex="@(Model.Composers.PageIndex - 1)"
+               asp-route-Keyword="@Model.Keyword"
+               asp-route-DateRange="@Model.DateRange"
+               asp-route-SortOrder="@Model.SortOrder">Trước</a>
+        </li>
+
+        @for (int i = 1; i <= Model.Composers.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Composers.PageIndex ? "active" : "")">
+                <a class="page-link" 
+                   asp-action="Index" 
+                   asp-route-pageIndex="@i"
+                   asp-route-Keyword="@Model.Keyword"
+                   asp-route-DateRange="@Model.DateRange"
+                   asp-route-SortOrder="@Model.SortOrder">@i</a>
+            </li>
+        }
+
+        <li class="page-item @nextDisabled">
+            <a class="page-link" 
+               asp-action="Index" 
+               asp-route-pageIndex="@(Model.Composers.PageIndex + 1)"
+               asp-route-Keyword="@Model.Keyword"
+               asp-route-DateRange="@Model.DateRange"
+               asp-route-SortOrder="@Model.SortOrder">Sau</a>
+        </li>
+    </ul>
+</nav>
